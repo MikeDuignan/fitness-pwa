@@ -18,7 +18,7 @@ import {
   Flame,
   Trophy,
   BarChart3,
-  Home as HomeIcon,
+  House,
   Library,
   User,
   Sparkles,
@@ -291,7 +291,7 @@ export default function Dashboard() {
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex items-center justify-around h-20">
             <button className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-500/20 text-emerald-400 transition-all">
-              <HomeIcon className="w-6 h-6" />
+              <House className="w-6 h-6" />
               <span className="text-xs font-semibold">Home</span>
             </button>
             <button className="flex flex-col items-center gap-2 px-6 py-3 rounded-2xl hover:bg-white/5 text-white/50 hover:text-white transition-all">
