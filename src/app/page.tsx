@@ -29,7 +29,7 @@ import {
   Heart
 } from 'lucide-react';
 
-export default function Home() {
+export default function Dashboard() {
   const router = useRouter();
   const { isOnboarded, user } = useUserStore();
   const { workouts } = useWorkoutStore();
