@@ -3,8 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUserStore, useWorkoutStore } from '@/lib/stores/user-store';
-import { useWorkoutStore as useWorkoutState } from '@/lib/stores/workout-store';
+import { useUserStore } from '@/lib/stores/user-store';
+import { useWorkoutStore } from '@/lib/stores/workout-store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
@@ -18,7 +18,7 @@ import {
   Flame,
   Trophy,
   BarChart3,
-  Home,
+  Home as HomeIcon,
   List,
   User,
   Sparkles,
@@ -29,7 +29,7 @@ import {
 export default function Home() {
   const router = useRouter();
   const { isOnboarded, user } = useUserStore();
-  const { workouts } = useWorkoutState();
+  const { workouts } = useWorkoutStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -258,7 +258,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-around h-16">
             <button className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg bg-violet-100 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400">
-              <Home className="w-6 h-6" />
+              <HomeIcon className="w-6 h-6" />
               <span className="text-xs font-semibold">Home</span>
             </button>
             <button className="flex flex-col items-center gap-1 px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors">
