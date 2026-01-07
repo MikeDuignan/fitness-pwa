@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    border-color: hsl(var(--border) / 0.5);
+  }
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Mobile-specific styles */
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .h-screen-safe {
+    height: calc(100vh - env(safe-area-inset-bottom));
+  }
+}
