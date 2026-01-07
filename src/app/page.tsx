@@ -1,5 +1,5 @@
 'use client';
-// Professional UI v2.0
+// Professional UI v2.1 - Vercel deployment check
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
