@@ -1,4 +1,5 @@
 'use client';
+// Force Vercel redeploy - UI redesign complete
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
