@@ -45,14 +45,18 @@ export class AICoach {
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || process.env.ZHIPU_API_KEY || '';
+  }
+
+  private validateApiKey(): void {
     if (!this.apiKey) {
       throw new Error('ZHIPU_API_KEY is not configured. Please add it to your environment variables.');
     }
   }
 
   async generateWorkoutPlan(userProfile: any, week: number = 1, previousFeedback: any[] = []): Promise<any> {
+    this.validateApiKey();
     const prompt = this.buildWorkoutPrompt(userProfile, week, previousFeedback);
-    
+
     const response = await this.callGLM(prompt, true);
     
     try {
@@ -79,8 +83,9 @@ export class AICoach {
   }
 
   async chat(message: string, context: any): Promise<string> {
+    this.validateApiKey();
     const systemPrompt = this.getSystemPrompt(context);
-    
+
     return await this.callGLMChat([
       { role: 'system', content: systemPrompt },
       { role: 'user', content: message },
@@ -141,6 +146,8 @@ Keep it concise and actionable. Format as plain text.`;
   }
 
   private async callGLM(prompt: string, jsonResponse: boolean = false): Promise<string> {
+    const model = process.env.ZHIPU_MODEL || 'glm-4-flash';  // Try glm-4-flash as default (faster and cheaper)
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -148,7 +155,7 @@ Keep it concise and actionable. Format as plain text.`;
         'Authorization': `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
-        model: 'glm-4-plus',
+        model,
         messages: [
           { role: 'user', content: prompt },
         ],
@@ -159,8 +166,8 @@ Keep it concise and actionable. Format as plain text.`;
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('GLM API Error:', error);
-      throw new Error(`GLM API error: ${response.status}`);
+      console.error('GLM API Error:', response.status, error);
+      throw new Error(`GLM API error (${response.status}): ${error}`);
     }
 
     const data = await response.json();
@@ -168,6 +175,8 @@ Keep it concise and actionable. Format as plain text.`;
   }
 
   private async callGLMChat(messages: any[]): Promise<string> {
+    const model = process.env.ZHIPU_MODEL || 'glm-4-flash';  // Try glm-4-flash as default (faster and cheaper)
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -175,7 +184,7 @@ Keep it concise and actionable. Format as plain text.`;
         'Authorization': `Bearer ${this.apiKey}`,
       },
       body: JSON.stringify({
-        model: 'glm-4-plus',
+        model,
         messages,
         temperature: 0.8,
         max_tokens: 2000,
@@ -184,8 +193,8 @@ Keep it concise and actionable. Format as plain text.`;
 
     if (!response.ok) {
       const error = await response.text();
-      console.error('GLM API Error:', error);
-      throw new Error(`GLM API error: ${response.status}`);
+      console.error('GLM API Error:', response.status, error);
+      throw new Error(`GLM API error (${response.status}): ${error}`);
     }
 
     const data = await response.json();

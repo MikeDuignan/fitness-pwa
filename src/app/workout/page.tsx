@@ -84,20 +84,33 @@ export default function WorkoutPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate workout');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+
+      if (!data.name || !data.exercises) {
+        throw new Error('Invalid workout data received from server');
+      }
+
       setWorkoutPlan(data);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to generate workout. Please try again.';
-      setError(errorMessage);
       console.error('Error generating workout:', err);
 
-      // Show more details if it's an API key error
-      if (errorMessage.includes('ZHIPU_API_KEY')) {
-        setError('⚠️ API Key Missing: Please add your ZHIPU_API_KEY to Vercel environment variables and redeploy.');
+      let errorMessage = 'Failed to generate workout. Please try again.';
+
+      if (err instanceof Error) {
+        if (err.message.includes('ZHIPU_API_KEY')) {
+          errorMessage = '⚠️ API Key Missing: Please add your ZHIPU_API_KEY to Vercel environment variables and redeploy.';
+        } else if (err.message.includes('Server error')) {
+          errorMessage = `⚠️ Server Error: ${err.message}\n\nMake sure your ZHIPU_API_KEY is configured in Vercel environment variables.`;
+        } else {
+          errorMessage = `⚠️ Error: ${err.message}\n\nIf this persists, check that your ZHIPU_API_KEY is properly configured.`;
+        }
       }
+
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -209,7 +222,7 @@ export default function WorkoutPage() {
 
               {error && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-2xl">
-                  <p className="text-red-400 text-sm">{error}</p>
+                  <p className="text-red-400 text-sm whitespace-pre-wrap">{error}</p>
                 </div>
               )}
             </CardContent>

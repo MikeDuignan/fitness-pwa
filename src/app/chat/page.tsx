@@ -59,16 +59,31 @@ export default function ChatPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+
+      if (!data.response) {
+        throw new Error('Invalid response from server');
+      }
+
       setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
     } catch (error) {
       console.error('Error sending message:', error);
-      const errorMessage = error instanceof Error && error.message.includes('ZHIPU_API_KEY')
-        ? '⚠️ API Key Missing: Your ZHIPU_API_KEY needs to be added to Vercel environment variables. Please add it and redeploy.'
-        : "I'm sorry, I'm having trouble connecting right now. Please check your internet connection and try again.";
+
+      let errorMessage = "I'm sorry, I'm having trouble connecting right now.";
+
+      if (error instanceof Error) {
+        if (error.message.includes('ZHIPU_API_KEY')) {
+          errorMessage = '⚠️ API Key Missing: Your ZHIPU_API_KEY needs to be added to Vercel environment variables. Please add it and redeploy.';
+        } else if (error.message.includes('Server error')) {
+          errorMessage = `⚠️ Server Error: ${error.message}\n\nMake sure your ZHIPU_API_KEY is configured in Vercel environment variables.`;
+        } else {
+          errorMessage = `⚠️ Error: ${error.message}\n\nIf this persists, check that your ZHIPU_API_KEY is properly configured.`;
+        }
+      }
 
       setMessages((prev) => [
         ...prev,
