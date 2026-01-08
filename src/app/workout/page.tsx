@@ -22,16 +22,27 @@ import { generateId } from '@/lib/utils';
 interface Exercise {
   name: string;
   sets: number;
-  reps: string;
-  rest: string;
+  reps: number;
+  weight?: number;
+  duration?: number;
+  restTime: number;
+  difficulty: string;
+  equipment: string;
+  instructions: string;
+  muscleGroups: string[];
+}
+
+interface WarmupCooldown {
+  name: string;
+  duration: number;
 }
 
 interface WorkoutPlan {
   name: string;
   focus: string;
   exercises: Exercise[];
-  warmup: string;
-  cooldown: string;
+  warmup: WarmupCooldown[];
+  cooldown: WarmupCooldown[];
   totalDuration: number;
   estimatedCalories: number;
   notes: string;
@@ -79,8 +90,14 @@ export default function WorkoutPage() {
       const data = await response.json();
       setWorkoutPlan(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate workout. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate workout. Please try again.';
+      setError(errorMessage);
       console.error('Error generating workout:', err);
+
+      // Show more details if it's an API key error
+      if (errorMessage.includes('ZHIPU_API_KEY')) {
+        setError('⚠️ API Key Missing: Please add your ZHIPU_API_KEY to Vercel environment variables and redeploy.');
+      }
     } finally {
       setLoading(false);
     }
@@ -258,7 +275,14 @@ export default function WorkoutPage() {
                 <CardTitle className="text-lg">Warm-up</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-white/70">{workoutPlan.warmup}</p>
+                <div className="space-y-2">
+                  {workoutPlan.warmup.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <span className="text-white/70">{item.name}</span>
+                      <span className="text-white/50 text-sm">{item.duration}s</span>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
 
@@ -278,10 +302,14 @@ export default function WorkoutPage() {
                         <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
                           <span className="text-emerald-400 font-bold">{index + 1}</span>
                         </div>
-                        <h3 className="font-semibold text-lg">{exercise.name}</h3>
+                        <div>
+                          <h3 className="font-semibold text-lg">{exercise.name}</h3>
+                          <p className="text-xs text-white/40">{exercise.equipment}</p>
+                        </div>
                       </div>
                       <CheckCircle className="w-5 h-5 text-white/20" />
                     </div>
+                    <p className="text-sm text-white/60 mb-3 ml-13">{exercise.instructions}</p>
                     <div className="grid grid-cols-3 gap-3 ml-13">
                       <div>
                         <p className="text-xs text-white/50 mb-1">Sets</p>
@@ -293,7 +321,7 @@ export default function WorkoutPage() {
                       </div>
                       <div>
                         <p className="text-xs text-white/50 mb-1">Rest</p>
-                        <p className="font-semibold">{exercise.rest}</p>
+                        <p className="font-semibold">{exercise.restTime}s</p>
                       </div>
                     </div>
                   </div>
@@ -307,7 +335,14 @@ export default function WorkoutPage() {
                 <CardTitle className="text-lg">Cool-down</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-white/70">{workoutPlan.cooldown}</p>
+                <div className="space-y-2">
+                  {workoutPlan.cooldown.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <span className="text-white/70">{item.name}</span>
+                      <span className="text-white/50 text-sm">{item.duration}s</span>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
 

@@ -66,11 +66,15 @@ export default function ChatPage() {
       setMessages((prev) => [...prev, { role: 'assistant', content: data.response }]);
     } catch (error) {
       console.error('Error sending message:', error);
+      const errorMessage = error instanceof Error && error.message.includes('ZHIPU_API_KEY')
+        ? '⚠️ API Key Missing: Your ZHIPU_API_KEY needs to be added to Vercel environment variables. Please add it and redeploy.'
+        : "I'm sorry, I'm having trouble connecting right now. Please check your internet connection and try again.";
+
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: "I'm sorry, I'm having trouble connecting right now. Please try again.",
+          content: errorMessage,
         },
       ]);
     } finally {

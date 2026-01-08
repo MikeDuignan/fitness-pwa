@@ -45,6 +45,9 @@ export class AICoach {
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || process.env.ZHIPU_API_KEY || '';
+    if (!this.apiKey) {
+      throw new Error('ZHIPU_API_KEY is not configured. Please add it to your environment variables.');
+    }
   }
 
   async generateWorkoutPlan(userProfile: any, week: number = 1, previousFeedback: any[] = []): Promise<any> {
