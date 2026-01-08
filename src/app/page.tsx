@@ -1,5 +1,5 @@
 'use client';
-// Professional UI v2.1 - Vercel deployment check
+// Professional UI v2.1 - Fixed naming conflict - Fresh deploy
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
