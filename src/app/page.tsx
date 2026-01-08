@@ -118,7 +118,7 @@ export default function Dashboard() {
                   <p className="text-white/90 text-lg">Let's crush today's session and hit your goals</p>
                 </div>
                 <Button
-                  onClick={() => {}}
+                  onClick={() => router.push('/workout')}
                   size="lg"
                   className="bg-white text-emerald-600 hover:bg-white/90 font-semibold h-14 px-8 rounded-full shadow-xl"
                 >
@@ -243,7 +243,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <Button
-                    onClick={() => {}}
+                    onClick={() => router.push('/chat')}
                     size="lg"
                     className="bg-purple-500 hover:bg-purple-600 text-white font-semibold h-12 px-6 rounded-full"
                   >
@@ -273,7 +273,7 @@ export default function Dashboard() {
                   <p className="text-white/50 max-w-md">Start your first workout to begin tracking your fitness journey and unlock insights</p>
                 </div>
                 <Button
-                  onClick={() => {}}
+                  onClick={() => router.push('/workout')}
                   size="lg"
                   className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold h-12 px-8 rounded-full"
                 >
