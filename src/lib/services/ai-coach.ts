@@ -146,7 +146,7 @@ Keep it concise and actionable. Format as plain text.`;
   }
 
   private async callGLM(prompt: string, jsonResponse: boolean = false): Promise<string> {
-    const model = process.env.ZHIPU_MODEL || 'glm-4';  // glm-4 is more widely available
+    const model = process.env.ZHIPU_MODEL || 'glm-3-turbo';  // glm-3-turbo is the most compatible
 
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
@@ -175,7 +175,7 @@ Keep it concise and actionable. Format as plain text.`;
   }
 
   private async callGLMChat(messages: any[]): Promise<string> {
-    const model = process.env.ZHIPU_MODEL || 'glm-4';  // glm-4 is more widely available
+    const model = process.env.ZHIPU_MODEL || 'glm-3-turbo';  // glm-3-turbo is the most compatible
 
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: 'POST',
